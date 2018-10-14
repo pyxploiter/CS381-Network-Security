@@ -1,2 +1,2 @@
-# Homophonic Cipher
+#Homophonic Cipher
 ![Homophonic Cipher](table.png)
