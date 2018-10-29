@@ -1,0 +1,1 @@
+https://cdn.jsdelivr.net/gh/xploiter-projects/CS381-Network-Security@1.0/xss.js
