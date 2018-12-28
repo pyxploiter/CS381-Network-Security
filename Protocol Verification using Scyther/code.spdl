@@ -1,0 +1,48 @@
+// The protocol description
+
+hashfunction hasho;
+
+usertype String;
+const msg: String;
+
+protocol ns3(client,server)
+{
+	
+	role client
+	{
+		
+		fresh ni: Nonce;
+		var recRandomNum: Nonce;
+
+		send_1(client,server, {client,ni}pk(server) );
+		recv_2(server,client, {ni, recRandomNum}pk(client) );			//receive random number to hash message
+		send_3(client, server, {hasho(msg, recRandomNum) }pk(server));	//send hashed msg
+		
+		claim_client(client, Secret, ni);
+		claim_client(client, Secret, recRandomNum);
+		claim_client(client, Alive);
+		claim_client(client, Weakagree);
+		claim_client(client,Niagree);
+		claim_client(client,Nisynch);
+	}	
+	
+	role server
+	{
+		fresh randomNum: Nonce;
+		var ni: Nonce;
+		var recMsg;
+
+		recv_1(client,server, {client,ni}pk(server) );
+		send_2(server, client, {ni, randomNum}pk(client));
+		recv_3(client, server, recMsg);			// receive hashed string
+		match(msg, hasho(recMsg, randomNum));	//decrypt hash string and verify
+		
+		claim_server(server,Secret,ni);
+		claim_server(server, Secret, randomNum); 
+		claim_server(server,Alive);
+		claim_server(server,Weakagree);
+		claim_server(server,Niagree);
+		claim_server(server,Nisynch);
+	}
+} 
+
